@@ -1,6 +1,6 @@
 import express from 'express';
 import path from 'path';
-import routerAdmin from './router';
+import routerAdmin from './router-admin';
 import router from './router';
 
 
@@ -24,7 +24,8 @@ app.set("view engine", "ejs");
 
 /* Routers */
 
-app.use('/', router);
+app.use('/admin', routerAdmin); // SSR
+app.use('/', router); // SPA
 
 
 export default app;

@@ -4,11 +4,6 @@ const router = express.Router();
 
 /* MALL */
 
-router.get('/', memberController.goHome);
-
-router.get('/signup', memberController.getSignup);
-
-router.get('/login', memberController.getLogin);
 
 
 export default router;
