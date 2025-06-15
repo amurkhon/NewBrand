@@ -1,3 +1,4 @@
+import Errors, { HttpCode, Message } from "../libs/Errors";
 import { MemberType } from "../libs/enum/member.enum";
 import { LoginInput, Member, MemberInput } from "../libs/types/member";
 import MemberModel from "../schema/Member.model";
@@ -16,8 +17,7 @@ class MemberService {
         const exist = await this.memberModel
         .findOne({memberType: MemberType.MALL})
         .exec();
-        if(exist)
-            throw new Error('Creation failed!');
+        if(exist) throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
         
         // TODO: Hash password
         try {
@@ -35,8 +35,9 @@ class MemberService {
             const result = await this.memberModel.findOne({memberNick: input.memberNick});
             
             const isMatch = result.memberPassword === input.memberPassword;
-            if(!isMatch)
-                throw new Error('Password is wrong!');
+            if(!isMatch) {
+            throw new Errors(HttpCode.UNAUTHORIZED, Message.WRONG_PASSWORD);
+        };
             return result.toJSON();
 
         } catch (err) {
