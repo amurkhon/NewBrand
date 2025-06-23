@@ -14,7 +14,7 @@ mallController.goHome = (req: Request, res: Response) => {
     try {
         console.log("goHome ");
 
-        res.send('goHome');
+        res.render('home');
     } catch (err) {
         console.log("Error, goHome: ",err);
     }
@@ -72,6 +72,19 @@ mallController.processLogin = async (req: AdminRequest, res: Response) => {
         console.log("Error, processSignup: ",err);
         const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
         res.send(`<script> alert("${message}"); window.location.replace('/admin/login') </script>`);
+    }
+};
+
+mallController.logout = async (req: AdminRequest, res: Response) => {
+    try {
+        console.log("logout");
+        req.session.destroy(() => {
+            res.redirect('/admin');
+        })
+
+    } catch (err) {
+        console.log("Error: ", err);
+        res.redirect('/admin')
     }
 };
 
