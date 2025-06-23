@@ -4,6 +4,17 @@ import routerAdmin from './router-admin';
 import router from './router';
 
 
+import session from 'express-session';
+import ConnectMongoDBSession from 'connect-mongodb-session';
+const MongoDBStore = ConnectMongoDBSession(session);
+const store = new MongoDBStore(
+    {
+        uri: process.env.MONGO_URL,
+        collection: 'sessions',
+    }
+)
+
+
 
 
 
@@ -16,6 +27,15 @@ app.use(express.json());
 
 
 /* Sessions */
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 * 30 //  1 MONTH
+  },
+  store: store,
+  resave: true,
+  saveUninitialized: true,
+}));
 
 /* Views */
 

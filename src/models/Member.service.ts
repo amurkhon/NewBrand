@@ -32,13 +32,20 @@ class MemberService {
 
     public async processLogin(input: LoginInput): Promise<Member> {
         try {
-            const result = await this.memberModel.findOne({memberNick: input.memberNick});
-            
-            const isMatch = result.memberPassword === input.memberPassword;
+            const member = await this.memberModel
+            .findOne(
+                {memberNick: input.memberNick},
+                {memberNick: true, memberPassword: true}
+            )
+            .exec();
+            if(!member) {
+            throw new Errors(HttpCode.NOT_FOUND, Message.NO_MEMBER_NICK);
+        }
+            const isMatch = member.memberPassword === input.memberPassword;
             if(!isMatch) {
             throw new Errors(HttpCode.UNAUTHORIZED, Message.WRONG_PASSWORD);
         };
-            return result.toJSON();
+            return member.toJSON();
 
         } catch (err) {
             console.log('Error, processLogin: ', err)
