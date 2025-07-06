@@ -3,7 +3,8 @@ import { T } from "../libs/types/common";
 import { NextFunction, Request, Response } from "express";
 import { AdminRequest, LoginInput, MemberInput } from "../libs/types/member";
 import { MemberType } from "../libs/enum/member.enum";
-import Errors, { Message } from "../libs/Errors";
+import Errors, { HttpCode, Message } from "../libs/Errors";
+import { json } from "stream/consumers";
 
 const mallController: T = {};
 
@@ -104,7 +105,6 @@ mallController.verifyMall = async(
     res: Response,
     next: NextFunction,
 ) => {
-    console.log(req?.session?.member);
     if(req?.session?.member?.memberType === MemberType.MALL){
         req.member = req.session.member;
         next();
@@ -123,6 +123,18 @@ mallController.getUsers = async (req: AdminRequest, res: Response) => {
     } catch(err) {
         console.log('Error, getUsers: ', err);
         res.redirect('/admin/login');
+    }
+};
+
+mallController.updateChosenUser = async (req: Request, res: Response) => {
+    try {
+        console.log('updateChosenUser');
+        const result = await memberService.updateChosenUser(req.body);
+        res.status(HttpCode.OK).json({data: result});
+    } catch (err) {
+        console.log('Error, updateChosenUser: ', err);
+        if(err instanceof Errors) res.status(err.code).json(err);
+        else res.status(Errors.standart.code).json(Errors.standart);
     }
 }
 

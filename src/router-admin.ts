@@ -25,6 +25,11 @@ routerAdmin
         mallController.verifyMall,
         mallController.getUsers,
     );
+routerAdmin.post(
+    '/user/edit',
+    mallController.verifyMall,
+    mallController.updateChosenUser,
+);
 
 /* Product */
 
