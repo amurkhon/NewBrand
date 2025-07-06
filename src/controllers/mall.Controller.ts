@@ -1,6 +1,6 @@
 import MemberService from "../models/Member.service";
 import { T } from "../libs/types/common";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { AdminRequest, LoginInput, MemberInput } from "../libs/types/member";
 import { MemberType } from "../libs/enum/member.enum";
 import Errors, { Message } from "../libs/Errors";
@@ -24,7 +24,7 @@ mallController.getSignup = (req: Request, res: Response) => {
     try {
         console.log("getSignup ");
 
-        res.send('signup page');
+        res.render('signup');
     } catch (err) {
         console.log("Error, getSignup: ",err);
     }
@@ -34,7 +34,7 @@ mallController.getLogin = (req: Request, res: Response) => {
     try {
         console.log("getLogin ");
 
-        res.send('login page');
+        res.render('login');
     } catch (err) {
         console.log("Error, getLogin: ",err);
     }
@@ -98,6 +98,35 @@ mallController.checkAuthSession = async (req: AdminRequest, res: Response) => {
         res.send(err);
     }
 }
+
+mallController.verifyMall = async(
+    req: AdminRequest,
+    res: Response,
+    next: NextFunction,
+) => {
+    console.log(req?.session?.member);
+    if(req?.session?.member?.memberType === MemberType.MALL){
+        req.member = req.session.member;
+        next();
+    } else {
+        const message = Message.NOT_AUTHENTICATED;
+        res.send(`<script>alert("${message}"); window.location.replace('/admin/login');</script>`);
+    }
+};
+
+mallController.getUsers = async (req: AdminRequest, res: Response) => {
+    try {
+        const result = await memberService.getUsers();
+
+        res.render('users', {members: result});
+
+    } catch(err) {
+        console.log('Error, getUsers: ', err);
+        res.redirect('/admin/login');
+    }
+}
+
+
 
 
 

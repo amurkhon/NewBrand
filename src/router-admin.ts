@@ -18,6 +18,14 @@ routerAdmin
 routerAdmin.get('/logout', mallController.logout);
 routerAdmin.get('/check-me', mallController.checkAuthSession);
 
+/* User */
+routerAdmin
+    .get(
+        '/user/all',
+        mallController.verifyMall,
+        mallController.getUsers,
+    );
+
 /* Product */
 
 routerAdmin.get('/product/all', productController.getAllProducts);
