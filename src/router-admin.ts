@@ -1,5 +1,6 @@
 import express from 'express';
 import mallController from './controllers/mall.Controller';
+import { productController } from './controllers/product.Controller';
 
 const routerAdmin = express.Router();
 
@@ -15,6 +16,10 @@ routerAdmin
     .post('/login', mallController.processLogin);
 
 routerAdmin.get('/logout', mallController.logout);
-routerAdmin.get('/check-me', mallController.checkAuthSession); 
+routerAdmin.get('/check-me', mallController.checkAuthSession);
+
+/* Product */
+
+routerAdmin.get('/product/all', productController.getAllProducts);
 
 export default routerAdmin;
