@@ -2,6 +2,7 @@ import Errors, { HttpCode, Message } from "../libs/Errors";
 import { MemberType } from "../libs/enum/member.enum";
 import { LoginInput, Member, MemberInput, MemberUpdateInput } from "../libs/types/member";
 import MemberModel from "../schema/Member.model";
+import bcrypt from "bcryptjs";
 
 
 class MemberService {
@@ -20,36 +21,31 @@ class MemberService {
         if(exist) throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
         
         // TODO: Hash password
+        const salt = await bcrypt.genSalt();
+        input.memberPassword = await bcrypt.hash(input.memberPassword, salt);
         try {
             const result = await this.memberModel.create(input);
             result.memberPassword = '';
-            return result.toJSON();
+            return result;
 
         } catch (err) {
-            console.log('Error, processSignup: ', err)
+            console.log('Error, processSignup: ', err);
+            throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
         }
     }
 
     public async processLogin(input: LoginInput): Promise<Member> {
-        try {
-            const member = await this.memberModel
-            .findOne(
-                {memberNick: input.memberNick},
-                {memberNick: true, memberPassword: true}
-            )
-            .exec();
-            if(!member) {
-            throw new Errors(HttpCode.NOT_FOUND, Message.NO_MEMBER_NICK);
-        }
-            const isMatch = member.memberPassword === input.memberPassword;
-            if(!isMatch) {
-            throw new Errors(HttpCode.UNAUTHORIZED, Message.WRONG_PASSWORD);
-        };
-            return await this.memberModel.findById(member._id).exec();
+        const member = await this.memberModel
+        .findOne(
+            {memberNick: input.memberNick},
+            {memberNick: true, memberPassword: true}
+        )
+        .exec();
+        if(!member) throw new Errors(HttpCode.NOT_FOUND, Message.NO_MEMBER_NICK);
+        const isMatch = await bcrypt.compare(input.memberPassword, member.memberPassword);
 
-        } catch (err) {
-            console.log('Error, processLogin: ', err)
-        }
+        if(!isMatch) throw new Errors(HttpCode.UNAUTHORIZED, Message.WRONG_PASSWORD);
+        return await this.memberModel.findById(member._id).exec();
     }
 
     public async getUsers(): Promise<Member[]> {

@@ -4,7 +4,6 @@ import { NextFunction, Request, Response } from "express";
 import { AdminRequest, LoginInput, MemberInput } from "../libs/types/member";
 import { MemberType } from "../libs/enum/member.enum";
 import Errors, { HttpCode, Message } from "../libs/Errors";
-import { json } from "stream/consumers";
 
 const mallController: T = {};
 
