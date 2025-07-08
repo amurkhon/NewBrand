@@ -35,4 +35,6 @@ routerAdmin.post(
 
 routerAdmin.get('/product/all', productController.getAllProducts);
 
+routerAdmin.post('/product/create', mallController.verifyMall, productController.createNewProduct);
+
 export default routerAdmin;

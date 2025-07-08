@@ -34,7 +34,11 @@ const productSchema = new Schema(
 
         productSize: {
             type: String,
-            enum: UpsideSize || DownsideSize || ShoesSize,
+            enum: [
+                ...Object.values(DownsideSize), 
+                ...Object.values(UpsideSize), 
+                ...Object.values(ShoesSize), 
+            ],
             require: true,
         },
         productColor: {
