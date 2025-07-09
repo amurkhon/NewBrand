@@ -33,8 +33,22 @@ routerAdmin.post(
 
 /* Product */
 
-routerAdmin.get('/product/all', productController.getAllProducts);
+routerAdmin.get(
+    '/product/all',
+    mallController.verifyMall, 
+    productController.getAllProducts
+);
 
-routerAdmin.post('/product/create', mallController.verifyMall, productController.createNewProduct);
+routerAdmin.post(
+    '/product/create', 
+    mallController.verifyMall, 
+    productController.createNewProduct
+);
+
+routerAdmin.post(
+    '/product/:id',
+    mallController.verifyMall,
+    productController.updateChosenProduct,
+);
 
 export default routerAdmin;

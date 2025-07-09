@@ -33,3 +33,18 @@ export interface ProductInput {
     productImages?: string[],
     productViews?: number,
 }
+
+export interface ProductChosenInput {
+    productStatus?: ProductStatus,
+    productCollection?: ProductCollelction,
+    productName?: string,
+    productPrice?: number,
+    productLeftCount?: number,
+    productSize?: UpsideSize | DownsideSize | ShoesSize,
+    productColor?: ProductColor,
+    productMaterial?: ProductMaterial,
+    productInGender?: Gender,
+    productDesc?: string,
+    productImages?: string[],
+    productViews?: number,
+}
