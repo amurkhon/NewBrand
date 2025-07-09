@@ -15,8 +15,8 @@ const productService = new ProductService();
 productController.getAllProducts = async (req: Request, res: Response) => {
     try {
         console.log("getAllProducts");
-        const result = await productService.getAllProducts();
-        res.render('products', {data: result});
+        const products = await productService.getAllProducts();
+        res.render("products", { data: products });
     } catch (err) {
         console.log('Error, getAllProducts: ', err);
         const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;

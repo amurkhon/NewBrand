@@ -71,7 +71,7 @@ mallController.processLogin = async (req: AdminRequest, res: Response) => {
         
         req.session.member = result;
         req.session.save(() => {
-            res.render('products');
+            res.redirect("/admin/product/all");
         });
     } catch (err) {
         console.log("Error, processSignup: ",err);
