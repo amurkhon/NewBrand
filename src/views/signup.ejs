@@ -4,7 +4,12 @@
 
 <body>
   <div class="signup-container">
-    <form action="/admin/signup" method="POST" enctype="multipart/form-data">
+    <form 
+      action="/admin/signup" 
+      method="POST" 
+      enctype="multipart/form-data"
+      onsubmit="return validationSignupForm()"
+    >
       <div class="signup-frame" style="width: 650px">
         <div class="signup-top">
           <span>Signup</span>
@@ -62,7 +67,7 @@
 
         <div class="signup-input-frame">
           <div class="media-frame">
-            <img class="upload-img-frame" src="/img/default.jpeg" />
+            <img class="upload-img-frame" src="/img/default-image.png" />
             <div class="upload-container">
               <span class="media-text">Product image</span>
               <div
