@@ -14,7 +14,7 @@ productController.getAllProducts = async (req: Request, res: Response) => {
     try {
         console.log("getAllProducts");
         const result = await productService.getAllProducts();
-        res.json(result);
+        res.render('products', {data: result});
     } catch (err) {
         console.log('Error, getAllProducts: ', err);
         const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
@@ -27,8 +27,7 @@ productController.createNewProduct = async (req: Request, res: Response) => {
         console.log('createNewProduct');
         const input = req.body;
         const result = await productService.createNewProduct(input);
-        res.json(result);
-        // res.render('products', {data: result});
+        res.render('products', {data: result});
     } catch (err) {
         console.log("Error, createNewProduct: ", err);
         const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
@@ -41,7 +40,7 @@ productController.updateChosenProduct = async (req: Request, res: Response) => {
         console.log('updateChosenProduct');
         const id = shapeIntoMongoObjectId(req.params.id);
         const result = await productService.updateChosenProduct(req.body, id);
-        res.json(result);
+        res.render('products', {data: result});
     } catch (err) {
         console.log("Error, updateChosenProduct: ", err);
         const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
