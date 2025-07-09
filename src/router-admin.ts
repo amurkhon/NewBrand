@@ -1,6 +1,7 @@
 import express from 'express';
 import mallController from './controllers/mall.Controller';
 import { productController } from './controllers/product.Controller';
+import makeUploader from './libs/utils/uploader';
 
 const routerAdmin = express.Router();
 
@@ -9,7 +10,11 @@ routerAdmin.get('/', mallController.goHome);
 
 routerAdmin
     .get('/signup', mallController.getSignup)
-    .post('/signup', mallController.processSignup);
+    .post(
+        '/signup',
+        makeUploader('members').single('memberImage'),
+        mallController.processSignup,
+    );
 
 routerAdmin
     .get('/login', mallController.getLogin)
@@ -41,7 +46,8 @@ routerAdmin.get(
 
 routerAdmin.post(
     '/product/create', 
-    mallController.verifyMall, 
+    mallController.verifyMall,
+    makeUploader('products').array('productImages', 5),
     productController.createNewProduct
 );
 
