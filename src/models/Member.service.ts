@@ -13,6 +13,8 @@ class MemberService {
         this.memberModel = MemberModel;
     }
 
+    /* SSR */ 
+
     public async processSignup(input: MemberInput): Promise<Member> {
 
         const exist = await this.memberModel
@@ -64,6 +66,39 @@ class MemberService {
         
         if(!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
         return result;
+    }
+
+    /* SPA */
+    
+    public async signup(input: MemberInput): Promise<Member> {
+
+        const salt = await bcrypt.genSalt();
+        input.memberPassword = await bcrypt.hash(input.memberPassword, salt);
+
+        try {
+            const result = await this.memberModel.create(input);
+            result.memberPassword = '';
+
+            return result.toJson();
+        } catch (err) {
+            console.log("Error, signup: ", err);
+            throw new Errors(HttpCode.BAD_REQUEST, Message.USED_NICK_PHONE);
+        }
+    }
+
+    public async login(input: LoginInput): Promise<Member> {
+        try {
+            const result = await this.memberModel.findOne({memberNick: input.memberNick}).exec();
+            if(!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_MEMBER_NICK);
+
+            const isMatch: Boolean = await bcrypt.compare(input.memberPassword, result.memberPassword);
+            if(!isMatch) throw new Errors(HttpCode.BAD_REQUEST, Message.WRONG_PASSWORD);
+
+            return result;
+        } catch (err) {
+            console.log("Error, login: ", err);
+            throw new Errors(HttpCode.BAD_REQUEST, Message.USED_NICK_PHONE);
+        }
     }
 
 }
