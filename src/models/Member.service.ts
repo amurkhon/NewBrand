@@ -1,5 +1,6 @@
+import { shapeIntoMongoObjectId } from "../libs/config";
 import Errors, { HttpCode, Message } from "../libs/Errors";
-import { MemberType } from "../libs/enum/member.enum";
+import { MemberStatus, MemberType } from "../libs/enum/member.enum";
 import { LoginInput, Member, MemberInput, MemberUpdateInput } from "../libs/types/member";
 import MemberModel from "../schema/Member.model";
 import bcrypt from "bcryptjs";
@@ -79,27 +80,49 @@ class MemberService {
             const result = await this.memberModel.create(input);
             result.memberPassword = '';
 
-            return result.toJson();
+            return result.toJSON();
         } catch (err) {
             console.log("Error, signup: ", err);
             throw new Errors(HttpCode.BAD_REQUEST, Message.USED_NICK_PHONE);
         }
-    }
+    };
 
     public async login(input: LoginInput): Promise<Member> {
         try {
-            const result = await this.memberModel.findOne({memberNick: input.memberNick}).exec();
-            if(!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_MEMBER_NICK);
+            const member = await this.memberModel
+                .findOne(
+                    {
+                        memberNick: input.memberNick,
+                        memberStatus: { $ne: MemberStatus.DELETE}
+                    },
+                    { memberNick: true, memberPassword: true, memberStatus: true }
+                )
+                .exec();
+            if(!member) {
+                throw new Errors(HttpCode.NOT_FOUND, Message.NO_MEMBER_NICK);
+            }
+            else if(member.memberStatus === MemberStatus.BLOCK) {
+                throw new Errors(HttpCode.FORBIDDEN, Message.BLOCKED_USER);
+            };
 
-            const isMatch: Boolean = await bcrypt.compare(input.memberPassword, result.memberPassword);
+            const isMatch: Boolean = await bcrypt.compare(input.memberPassword, member.memberPassword);
             if(!isMatch) throw new Errors(HttpCode.BAD_REQUEST, Message.WRONG_PASSWORD);
 
-            return result;
+            return await this.memberModel.findById(member._id).lean().exec();
         } catch (err) {
-            console.log("Error, login: ", err);
             throw new Errors(HttpCode.BAD_REQUEST, Message.USED_NICK_PHONE);
         }
-    }
+    };
+
+    public async getMemberDetail(member: Member): Promise<Member> {
+       const memberId = shapeIntoMongoObjectId(member._id);
+       const result = await this.memberModel.findOne({_id: memberId, memberStatus: MemberStatus.ACTIVE }).exec();
+
+       if(!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+
+       return result;
+    };
+
 
 }
 

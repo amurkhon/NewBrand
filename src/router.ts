@@ -2,7 +2,14 @@ import express from 'express';
 import memberController from './controllers/member.Controller';
 const router = express.Router();
 
-/* MALL */
+/* Member */
+router.post('/signup', memberController.signup);
+router.post('/login', memberController.login);
+router.get(
+    '/member/detail',
+    memberController.verifyAuth, 
+    memberController.getMemberDetail
+);
 
 
 
