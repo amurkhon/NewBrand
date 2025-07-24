@@ -6,6 +6,11 @@ const router = express.Router();
 router.post('/signup', memberController.signup);
 router.post('/login', memberController.login);
 router.get(
+    '/logout', 
+    memberController.verifyAuth, 
+    memberController.logout
+);
+router.get(
     '/member/detail',
     memberController.verifyAuth, 
     memberController.getMemberDetail
