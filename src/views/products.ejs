@@ -25,10 +25,10 @@
       </ul>
     </div>
 
-    <div class="restaurant-menu-frame">
+    <div class="mall-menu-frame">
       <div class="board">
-        <div class="dishes-table">
-          <span class="new-dish-txt" style="margin-bottom: 30px">
+        <div class="mall-table">
+          <span class="new-product-txt" style="margin-bottom: 30px">
             BOUTIQUE MENU
           </span>
           <table class="table table-bordered table-hover">
@@ -40,6 +40,9 @@
                 <th scope="col">Product Size</th>
                 <th scope="col">Product Price</th>
                 <th scope="col">Product Left Count</th>
+                <th scope="col">Product In Gender</th>
+                <th scope="col">Product Color</th>
+                <th scope="col">Product Material</th>
                 <th scope="col">Status</th>
               </tr>
             </thead>
@@ -52,6 +55,9 @@
                 <td><%= product?.productSize %></td>
                 <td><%= product?.productPrice %></td>
                 <td><%= product?.productLeftCount %></td>
+                <td><%= product?.productInGender %></td>
+                <td><%= product?.productColor %></td>
+                <td><%= product?.productMaterial %></td>
                 <td>
                   <select id="<%= product._id  %>" class="spec-select new-product-status">
                     <option value="PAUSE" <%= product.productStatus ==='PAUSE' ? 'selected' : '' %>>PAUSE</option>
@@ -79,7 +85,7 @@
           enctype="multipart/form-data"
         >
           <div class="long-input" style="display: flex; align-items: center">
-            <span class="new-dish-txt">NEW PRODUCT DETAIL</span>
+            <span class="new-product-txt">NEW PRODUCT DETAIL</span>
           </div>
           <div class="login-input-frame">
             <div class="long-input">
@@ -122,34 +128,113 @@
             <div class="half-input">
               <label>Product Type</label>
               <select class="product-collection" name="productCollection">
-                <option value="DISH" selected>Dish</option>
-                <option value="SALAD">Salad</option>
-                <option value="DESSERT">Dessert</option>
-                <option value="DRINK">Drink</option>
+                <option value="T-SHIRT" selected>T-Shirt</option>
+                <option value="CAP">Cap</option>
+                <option value="SHIRT">Shirt</option>
+                <option value="JACKET">Jacket</option>
+                <option value="SWEATER">Sweater</option>
+                <option value="SHOES">Shoes</option>
+                <option value="SNEAKERS">Sneakers</option>
+                <option value="JEANS">Jeans</option>
                 <option value="OTHER">Other</option>
               </select>
             </div>
 
-            <div class="half-input" id="product-collection">
-              <label>Dish Volume</label>
+            <div class="half-input" id="product-upside-size">
+              <label>Upside Size</label>
               <select class="product-size" name="productSize">
-                <option value="SMALL">Small</option>
-                <option value="NORMAL" selected>Normal</option>
-                <option value="LARGE">Large</option>
-                <option value="SET">Set</option>
+                <option value="XXS">XXS</option>
+                <option value="XS" selected>XS</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="XXL">XXL</option>
+                <option value="XXXL">XXXL</option>
               </select>
             </div>
 
-            <div class="half-input" id="product-volume" style="display: none">
-              <label>Drink Volume</label>
-              <select class="product-volume" name="productVolume">
-                <option value="0.5">0,5 liters</option>
-                <option value="1" selected>1 liters</option>
-                <option value="1.2">1,2 liters</option>
-                <option value="1.5">1,5 liters</option>
-                <option value="2">2 liters</option>
+            <div class="half-input" id="product-downside-size" style="display: none">
+              <label>Downside Size</label>
+              <select class="product-size" name="">
+                <option value="W_26">26</option>
+                <option value="W_27">27</option>
+                <option value="W_28">28</option>
+                <option value="W_29">29</option>
+                <option value="W_30" selected>30</option>
+                <option value="W_31">31</option>
+                <option value="W_32">32</option>
+                <option value="W_33">33</option>
+                <option value="W_34">34</option>
+                <option value="W_35">35</option>
+                <option value="W_36">36</option>
+                <option value="W_38">38</option>
+                <option value="W_40">40</option>
+                <option value="W_42">42</option>
+                <option value="W_44">44</option>
+                <option value="W_46">46</option>
               </select>
             </div>
+
+            <div class="half-input" id="product-shoes-size" style="display: none">
+              <label>Shoes Size</label>
+              <select class="product-size" name="">
+                <option value="KR_220">220</option>
+                <option value="KR_230">230</option>
+                <option value="KR_235">235</option>
+                <option value="KR_240">240</option>
+                <option value="KR_245">245</option>
+                <option value="KR_250">250</option>
+                <option value="KR_255">255</option>
+                <option value="KR_260" selected >260</option>
+                <option value="KR_265">265</option>
+                <option value="KR_270">270</option>
+                <option value="KR_275">275</option>
+                <option value="KR_280">280</option>
+                <option value="KR_285">285</option>
+                <option value="KR_290">290</option>
+                <option value="KR_295">295</option>
+                <option value="KR_300">300</option>
+              </select>
+            </div>
+          </div>
+          <div class="half-input-frame">
+            <div class="half-input">
+              <label>Product Color</label>
+              <select class="product-collection" name="productColor">
+                <option value="BLACK" selected>Black</option>
+                <option value="WHITE">White</option>
+                <option value="RED">Red</option>
+                <option value="GREEN">Green</option>
+                <option value="YELLOW">Yellow</option>
+                <option value="GREY">Grey</option>
+                <option value="NAVY">Navy</option>
+                <option value="PINK">Pink</option>
+                <option value="MULTI">Multi</option>
+              </select>
+            </div>
+            <div class="half-input">
+              <label>Product Material</label>
+              <select class="product-collection" name="productMaterial">
+                <option value="COTTON" selected>Cotton</option>
+                <option value="POLYESTER">Polyester</option>
+                <option value="LINEN">Linen</option>
+                <option value="WOOL">Wool</option>
+                <option value="SILK">Silk</option>
+                <option value="DENIM">Denim</option>
+                <option value="LEATHER">Leather</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="long-input">
+            <label>Product In Gender</label>
+            <select class="product-collection" name="productInGender">
+              <option value="MALE" selected>Male</option>
+              <option value="FEMALE">Female</option>
+              <option value="UNISEX">Unisex</option>
+              <option value="KIDS">Kids</option>
+            </select>
           </div>
           <div class="long-input">
             <label>Product Description</label>
@@ -167,6 +252,7 @@
                   name="productImages"
                   class="image-one"
                   required
+                  onchange="previewFileHandler(this, 1)"
                 />
               </div>
               <div class="upload-img-box">
@@ -176,6 +262,7 @@
                   id="file"
                   name="productImages"
                   class="image-two"
+                  onchange="previewFileHandler(this, 2)"
                 />
               </div>
               <div class="upload-img-box">
@@ -185,6 +272,7 @@
                   id="file"
                   name="productImages"
                   class="image-three"
+                  onchange="previewFileHandler(this, 3)"
                 />
               </div>
               <div class="upload-img-box">
@@ -194,6 +282,7 @@
                   id="file"
                   name="productImages"
                   class="image-four"
+                  onchange="previewFileHandler(this, 4)"
                 />
               </div>
               <div class="upload-img-box">
@@ -203,6 +292,7 @@
                   id="file"
                   name="productImages"
                   class="image-five"
+                  onchange="previewFileHandler(this, 5)"
                 />
               </div>
               <input name="restaurantIid" class="restaurant-id" hidden />
