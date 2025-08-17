@@ -3,14 +3,16 @@ import Errors, { HttpCode, Message } from "../libs/Errors";
 import { T } from "../libs/types/common";
 import { Request, Response } from "express";
 import { shapeIntoMongoObjectId } from "../libs/config";
-import { AdminRequest } from "../libs/types/member";
-import { ProductInput } from "../libs/types/product";
+import { AdminRequest, ExtendedRequest } from "../libs/types/member";
+import { ProductInput, ProductInquiry } from "../libs/types/product";
+import { ProductCollelction } from "../libs/enum/product.enum";
 
 
 export const productController: T = {};
 
 const productService = new ProductService();
 
+/* SSR */ 
 
 productController.getAllProducts = async (req: Request, res: Response) => {
     try {
@@ -54,4 +56,44 @@ productController.updateChosenProduct = async (req: Request, res: Response) => {
         const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
         res.send(`<script> alert("${message}"); window.location.replace('/admin/product/all) </script>`);
     }
-}
+};
+
+/* SPA */
+
+productController.getProducts = async (req: Request, res: Response) => {
+    try {
+        console.log('getProducts');
+        const {page, limit, order, productCollection, search} = req.query;
+        const inquiry: ProductInquiry = {
+            order: String(order),
+            page: Number(page),
+            limit: Number(limit),
+        };
+        if(productCollection)
+            inquiry.productCollection = productCollection as ProductCollelction
+        if(search)
+            inquiry.search = String(search);
+
+        const result = await productService.getProducts(inquiry);
+
+        res.status(HttpCode.OK).json(result);
+    }catch(err) {
+        console.log("Error, getAllProducts: ", err);
+        const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
+        res.send(`<script> alert("${message}"); window.location.replace('/admin/product/all) </script>`);
+    }
+};
+
+productController.getProduct = async (req: ExtendedRequest, res: Response) => {
+    try {
+        console.log('getProduct');
+        const { id } = req.params;
+        const memberId = req.member?._id ?? null,
+            result = await productService.getProduct(memberId, id);
+        res.status(HttpCode.OK).json(result);
+    }catch(err) {
+        console.log("Error, getProduct: ", err);
+        const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
+        res.send(`<script> alert("${message}"); window.location.replace('/admin/product/all) </script>`);
+    }
+};
