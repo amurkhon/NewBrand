@@ -30,7 +30,7 @@ const memberSchema = new Schema (
         },
 
         memberPhone: {
-            type: String,
+            type: Number,
             index: {unique: true, sparse: true},
             require: true,
         },

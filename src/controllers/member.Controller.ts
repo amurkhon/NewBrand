@@ -1,8 +1,8 @@
-import { ExtendedRequest, LoginInput, MemberInput } from "../libs/types/member";
+import { ExtendedRequest, LoginInput, MemberInput, MemberUpdateInput } from "../libs/types/member";
 import { T } from "../libs/types/common";
 import { NextFunction, Request, Response } from "express";
 import MemberService from "../models/Member.service";
-import Errors, { HttpCode } from "../libs/Errors";
+import Errors, { HttpCode, Message } from "../libs/Errors";
 import AuthService from "../models/Auth.service";
 import { AUTH_TIME } from "../libs/config";
 
@@ -12,6 +12,21 @@ const memberController: T = {};
 const memberService = new MemberService();
 
 const authService = new AuthService();
+
+memberController.mall = async (req: Request, res: Response) => {
+    try {
+        console.log('getMall');
+
+        const result = await memberService.getMall();
+
+        res.status(HttpCode.OK).json(result);
+
+    } catch (err) {
+        console.log("Error, getMall: ", err);
+        if (err instanceof Errors) return res.status(err.code).json(err);
+        else res.status(Errors.standart.code).json(Errors.standart);
+    }
+};
 
 memberController.signup = async (req: Request, res: Response) => {
     try {
@@ -35,7 +50,6 @@ memberController.signup = async (req: Request, res: Response) => {
 memberController.login = async (req: Request, res: Response) => {
     try {
         console.log("login");
-        console.log("result: ", req.body);
         const input: LoginInput = req.body,
             result = await memberService.login(input);
         const token = await authService.createToken(result);
@@ -51,19 +65,6 @@ memberController.login = async (req: Request, res: Response) => {
         else res.status(Errors.standart.code).json(Errors.standart);
     }
 }
-
-memberController.logout = async (req: Request, res: Response) => {
-    try {
-        console.log("logout");
-        res.cookie('accessToken', null, {maxAge: 0, httpOnly: false} );
-        res.status(HttpCode.OK).json({logout: true});
-
-    } catch (err) {
-        console.log("Error, logout: ", err);
-        if (err instanceof Errors) return res.status(err.code).json(err);
-        else res.status(Errors.standart.code).json(Errors.standart);
-    }
-};
 
 memberController.getMemberDetail = async (req: ExtendedRequest, res: Response) => {
     try{
@@ -91,6 +92,37 @@ memberController.logout = async (req: ExtendedRequest, res: Response) => {
     }
 };
 
+memberController.updateMember = async (req: ExtendedRequest, res: Response) => {
+    try {
+        console.log("updateMember");
+        const input: MemberUpdateInput = req.body;
+        if(req.file) input.memberImage = req.file.path.replace(/\\/g,"/");
+
+
+        const result = await memberService.updateMember(req.member, input);
+
+        res.status(HttpCode.OK).json(result);
+
+    } catch (err) {
+        console.log("Error, updateMember: ", err);
+        if (err instanceof Errors) return res.status(err.code).json(err);
+        else res.status(Errors.standart.code).json(Errors.standart);
+    }
+};
+
+memberController.getTopUsers = async (req: Request, res: Response) => {
+    try {
+        const result = await memberService.getTopUsers();
+
+        res.status(HttpCode.OK).json(result);
+    } catch (err) {
+        console.log("Error, getTopUsers: ", err);
+        if (err instanceof Errors) return res.status(err.code).json(err);
+        else res.status(Errors.standart.code).json(Errors.standart);
+    }
+
+};
+
 memberController.verifyAuth = async(
     req: ExtendedRequest,
     res: Response,
@@ -100,10 +132,14 @@ memberController.verifyAuth = async(
         const token = req.cookies['accessToken'];
         if(token)
             req.member = await authService.verifyAuth(token);
+
+        if(!req.member)
+            throw new Errors(HttpCode.UNAUTHORIZED, Message.NOT_AUTHENTICATED);
         next();
     } catch (err) {
-        console.log("Error, retrieveAuth: ", err);
-        next();
+        console.log("Error, verifyAuth: ", err);
+        if (err instanceof Errors) return res.status(err.code).json(err);
+        else res.status(Errors.standart.code).json(Errors.standart);
     }
 };
 
