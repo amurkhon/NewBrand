@@ -133,8 +133,9 @@ mallController.getUsers = async (req: AdminRequest, res: Response) => {
 mallController.updateChosenUser = async (req: Request, res: Response) => {
     try {
         console.log('updateChosenUser');
+        console.log('req.body===',req.body);
         const result = await memberService.updateChosenUser(req.body);
-        res.status(HttpCode.OK).json({data: result});
+        res.render('users', {member: result});
     } catch (err) {
         console.log('Error, updateChosenUser: ', err);
         if(err instanceof Errors) res.status(err.code).json(err);
