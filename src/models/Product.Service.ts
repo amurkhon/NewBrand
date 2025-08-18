@@ -7,11 +7,16 @@ import { ObjectId } from "mongoose";
 import { shapeIntoMongoObjectId } from "../libs/config";
 import { ProductStatus } from "../libs/enum/product.enum";
 import { T } from "../libs/types/common";
+import { ViewInput } from "../libs/types/view";
+import { ViewGroup } from "../libs/enum/view.enum";
+import ViewService from "./View.service";
 
 class ProductService {
     private readonly productModel;
+    private readonly viewService;
     constructor() {
         this.productModel = ProductModel;
+        this.viewService = new ViewService();
     }
     /* SPA */
     
@@ -49,31 +54,31 @@ class ProductService {
         if(!result)
             throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
 
-        // if(memberId) {
-        //     // Check Existence
-        //     const input: ViewInput = {
-        //         memberId: memberId,
-        //         viewRefId: productId,
-        //         viewGroup: ViewGroup.PRODUCT,
-        //     };
-        //     const existView = await this.viewService.checkViewExistence(input);
+        if(memberId) {
+            // Check Existence
+            const input: ViewInput = {
+                memberId: memberId,
+                viewRefId: productId,
+                viewGroup: ViewGroup.PRODUCT,
+            };
+            const existView = await this.viewService.checkViewExistence(input);
 
-        //     // Insert New View
-        //     if(!existView) {
-        //         console.log("Planning to insert new View");
-        //         await this.viewService.insertMemberView(input);
+            // Insert New View
+            if(!existView) {
+                console.log("Planning to insert new View");
+                await this.viewService.insertMemberView(input);
 
-        //         // Increase Counts
-        //         result = await this.productModel
-        //         .findByIdAndUpdate(
-        //             productId,
-        //             {$inc: {productViews: +1} },
-        //             {new: true}
-        //         )
-        //         .exec();
-        //     }
+                // Increase Counts
+                result = await this.productModel
+                .findByIdAndUpdate(
+                    productId,
+                    {$inc: {productViews: +1} },
+                    {new: true}
+                )
+                .exec();
+            }
 
-        // }
+        }
 
         return result;
     };
