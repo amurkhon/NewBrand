@@ -2,6 +2,7 @@ import express from 'express';
 import memberController from './controllers/member.Controller';
 import uploader from './libs/utils/uploader';
 import { productController } from './controllers/product.Controller';
+import orderController from './controllers/order.Controller';
 const router = express.Router();
 
 /* Member */
@@ -37,6 +38,25 @@ router.get(
     '/product/:id',
     memberController.retrieveAuth,
     productController.getProduct
+);
+
+/* Order */
+router.post(
+    "/order/create",
+    memberController.verifyAuth,
+    orderController.createOrder
+);
+
+router.get(
+    '/order/all',
+    memberController.verifyAuth,
+    orderController.getMyOrders
+);
+
+router.post(
+    '/order/update',
+    memberController.verifyAuth,
+    orderController.updateOrder
 );
 
 
