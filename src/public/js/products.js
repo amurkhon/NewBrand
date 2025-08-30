@@ -78,7 +78,7 @@ function previewFileHandler(input, order) {
 
     const file = $(`.${imgClassName}`).get(0).files[0],
      fileType = file["type"],
-     validImageType = ["image/jpg", "image/jpeg", "image/png"];
+     validImageType = ["image/jpg", "image/jpeg", "image/png", "image/webp", "image/avif"];
     if(!validImageType.includes(fileType)) {
         alert("Please insert only jpg, jpeg and png!");
     } else {
