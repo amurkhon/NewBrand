@@ -4,6 +4,7 @@ import routerAdmin from './router-admin';
 import router from './router';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 
 import session from 'express-session';
@@ -29,6 +30,12 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use('/uploads', express.static('./uploads'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(
+  cors({
+    credentials: true,
+    origin: true,
+  })
+);
 app.use(cookieParser());
 app.use(morgan(MORGAN_FORMAT));
 

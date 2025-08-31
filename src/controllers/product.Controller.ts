@@ -50,7 +50,7 @@ productController.updateChosenProduct = async (req: Request, res: Response) => {
         console.log('updateChosenProduct');
         const id = shapeIntoMongoObjectId(req.params.id);
         const result = await productService.updateChosenProduct(req.body, id);
-        res.render('products', {data: result});
+        res.send(`<script> alert("${result}"); window.location.replace('/admin/product/all') </script>`);
     } catch (err) {
         console.log("Error, updateChosenProduct: ", err);
         const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
