@@ -57,6 +57,7 @@ function validateForm() {
      productLeftCount = $(".product-left-count").val(),
      productCollection = $(".product-collection").val(),
      productDesc = $(".product-desc").val(),
+     productSize = $(".product-size").val(),
      productStatus = $(".product-status").val();
 
 
@@ -66,7 +67,8 @@ function validateForm() {
         productLeftCount === "" ||
         productCollection === "" ||
         productDesc === "" ||
-        productStatus === ""
+        productStatus === "" ||
+        productSize === ""
     ) {
             alert("Please insert all required details!");
             return false;
