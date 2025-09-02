@@ -81,6 +81,8 @@ productSchema.index(
     {
         productName: 1, 
         productSize: 1,
+        productColor:1,
+        
     },{ unique: true }
 );
 export default mongoose.model('Product', productSchema);
