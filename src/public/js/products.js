@@ -6,17 +6,17 @@ $(function () {
         const selectedValue = $(".product-collection").val();
 
         if(["T-SHIRT","CAP","SHIRT","JACKET","SWEATER","OTHER"].includes(selectedValue)) {
-            $("#product-upside-size").show();
-            $("#product-downside-size").hide();
-            $("#product-shoes-size").hide();
+            $("#product-upside-size").show().find("select").attr("name", "productSize");
+            $("#product-downside-size").hide().find("select").removeAttr('name').prop('disabled', true);
+            $("#product-shoes-size").hide().find("select").removeAttr('name').prop('disabled', true);
         } else if (selectedValue === "JEANS") {
-            $("#product-downside-size").show();
-            $("#product-upside-size").hide();
-            $("#product-shoes-size").hide();
+            $("#product-downside-size").show().find("select").attr("name", "productSize");
+            $("#product-upside-size").hide().find("select").removeAttr('name').prop('disabled', true);
+            $("#product-shoes-size").hide().find("select").removeAttr('name').prop('disabled', true);
         } else if (["SHOES","SNEAKERS"].includes(selectedValue)) {
-            $("#product-shoes-size").show();
-            $("#product-downside-size").hide();
-            $("#product-upside-size").hide();
+            $("#product-shoes-size").show().find("select").attr("name", "productSize");
+            $("#product-downside-size").hide().find("select").removeAttr('name').prop('disabled', true);
+            $("#product-upside-size").hide().find("select").removeAttr('name').prop('disabled', true);
         }
     });
 
@@ -59,6 +59,8 @@ function validateForm() {
      productDesc = $(".product-desc").val(),
      productSize = $(".product-size").val(),
      productStatus = $(".product-status").val();
+    
+    console.log("result: ", productSize);
 
 
     if (
