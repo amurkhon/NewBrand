@@ -9,7 +9,7 @@ const router = express.Router();
 router.get('/member/mall', memberController.mall);
 router.post('/member/signup', memberController.signup);
 router.post('/member/login', memberController.login);
-router.get(
+router.post(
     '/member/logout', 
     memberController.verifyAuth, 
     memberController.logout
