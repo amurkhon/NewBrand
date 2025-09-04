@@ -39,6 +39,7 @@ orderController.getMyOrders = async (
             orderStatus: orderStatus as OrderStatus,
         };
         const orders = await orderService.getMyOrders(req.member, inquiry);
+        console.log("results",orders);
         
 
         res.status(HttpCode.OK).json(orders);

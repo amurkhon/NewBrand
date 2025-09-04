@@ -33,7 +33,7 @@ class OrderService {
             return accumulator + item.itemPrice * item.itemQuantity;
         }, 0);
 
-        const delivery = amount < 100 ? 5 : 0;
+        const delivery = amount < 300 ? 15 : 0;
 
         try {
             const newOrder: Order = await this.orderModel.create({
@@ -70,8 +70,6 @@ class OrderService {
     public async getMyOrders(member: Member, inquiry: OrderInquiry): Promise<Order[]> {
         const memberId = shapeIntoMongoObjectId(member._id);
         const match = {memberId: memberId, orderStatus: inquiry.orderStatus};
-
-        console.log('memberId: ', memberId);
         
         const result = await this.orderModel
             .aggregate([
@@ -99,8 +97,6 @@ class OrderService {
         
         if(!result)
             throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
-
-        console.log('RESULT: ', result);
 
         return result;
     };
