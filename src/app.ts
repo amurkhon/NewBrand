@@ -5,6 +5,8 @@ import router from './router';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import { Server as SocketIOServer } from 'socket.io';
+import http from 'http';
 
 
 import session from 'express-session';
@@ -67,5 +69,24 @@ app.set("view engine", "ejs");
 app.use('/admin', routerAdmin); // SSR
 app.use('/', router); // SPA
 
+const server = http.createServer(app);
+const io = new SocketIOServer(server, {
+  cors: {
+    origin: true,
+    credentials: true,
+  },
+});
 
-export default app;
+let summaryClient = 0;
+io.on("connection", (socket) => {
+  summaryClient++;
+  console.log(`Connection & total [${summaryClient}]`);
+
+  socket.on('disconnect', () => {
+    summaryClient--;
+    console.log(`Disconnection & total [${summaryClient}]`);
+  });
+});
+
+
+export default server;
