@@ -35,7 +35,7 @@ app.use(express.json());
 app.use(
   cors({
     credentials: true,
-    origin: true,
+    origin: 'newbrand.uz',
   })
 );
 app.use(cookieParser());

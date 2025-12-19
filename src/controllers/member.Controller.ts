@@ -37,8 +37,9 @@ memberController.signup = async (req: Request, res: Response) => {
 
         res.cookie('accessToken', token, {
             maxAge: AUTH_TIME * 3600 * 1000,
-            httpOnly: false,
+            httpOnly: true,
             secure: false,
+            sameSite: 'none',
         });
         res.status(HttpCode.OK).json({member: result, accesToken: token});
     } catch (err) {
@@ -57,8 +58,9 @@ memberController.login = async (req: Request, res: Response) => {
 
         res.cookie('accessToken', token, {
             maxAge: AUTH_TIME * 3600 * 1000,
-            httpOnly: false,
+            httpOnly: true,
             secure: false,
+            sameSite: 'none',
         });
         res.status(HttpCode.OK).json({member: result, accessToken: token});
     } catch (err) {
